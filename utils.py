@@ -8,6 +8,8 @@ warnings.filterwarnings('ignore')
 from datetime import datetime
 import networkx as nx 
 import plotly.express as px
+import matplotlib.pyplot as plt
+from plotly.subplots import make_subplots
 
 
 '''
@@ -49,18 +51,31 @@ def convert_to_pd(TASKS):
     list_end=[]
     list_skillset=[]
     list_type=[]
+    list_projects=[]
     for (p,t) in TASKS.keys():
+        list_projects.append(p)
         list_tasks.append(t)
         list_start.append(str_to_date(TASKS[(p,t)]['start_date']))
         list_end.append(str_to_date(TASKS[(p,t)]['end_date']))
         list_skillset.append(TASKS[(p,t)]['skillset'])
         list_type.append(TASKS[(p,t)].get('type',None)) 
-    return pd.DataFrame({"Task":list_tasks , "Start":list_start,"End":list_end,"Role":list_skillset,"Type":list_type})
+    return pd.DataFrame({"Project":list_projects,"Task":list_tasks , "Start":list_start,"End":list_end,"Role":list_skillset,"Type":list_type})
 
 
 def plot_gantt_chart(df_tasks):
     fig = px.timeline(df_tasks, x_start="Start", x_end="End", y="Task",color="Role")
     fig.update_yaxes(autorange="reversed") # otherwise tasks are listed from the bottom up
+    fig.show()
+
+def plot_assignment_gantt_chart(df_tasks):
+    num_projects=len(df_tasks['Project'].unique())
+    fig = make_subplots(rows=num_projects, cols=2)
+
+
+    for project in df_tasks['Project'].unique():
+        df_plot=df_tasks[df_tasks['Project']==project]
+        fig = px.timeline(df_plot, x_start="Start", x_end="End", y="Task",color="assignment_status")
+        fig.update_yaxes(autorange="reversed") # otherwise tasks are listed from the bottom up
     fig.show()
 
 
@@ -157,7 +172,8 @@ def get_over_lap_tasks(TASKS):
             # print(skill_overlap)
             time_overlap=two_task_time_overlap(task_keys_list[i],task_keys_list[j],TASKS)
             # print(time_overlap)
-            if skill_overlap==1 and time_overlap==1:
+            # if skill_overlap==1 and time_overlap==1:
+            if time_overlap==1:
                 list_overlap.append( (task_keys_list[i],task_keys_list[j]))
     return list_overlap
 

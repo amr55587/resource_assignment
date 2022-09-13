@@ -10,7 +10,7 @@ def main(dict_resources):
     bench_count=0
     bench_list=[]
     for resource in dict_resources.keys():
-        if dict_resources[resource].get('num_ongoing_projects') is None:
+        if dict_resources[resource].get('num_ongoing_projects') ==0:
             bench_count=  bench_count + 1 
             bench_list.append(resource)
 
@@ -56,12 +56,12 @@ def main(dict_resources):
     return num_resources,bench_count,bench_list,resource_utilization_dict
 
 
+if __name__ == "__main__":
+    dict_resources=parse_res.main("data")
+    num_resources,bench_count,bench_list,resource_utilization_dict=main(dict_resources)
 
-dict_resources=parse_res.main("data")
-num_resources,bench_count,bench_list,resource_utilization_dict=main(dict_resources)
 
-
-print(f"You have {num_resources} Resources")
-print(f"Currently there are {bench_count} on bench ")
-print(f"The people on bench are {bench_list}")
-print("The resources utilization are ",resource_utilization_dict)
+    # print(f"You have {num_resources} Resources")
+    # print(f"Currently there are {bench_count} on bench ")
+    # print(f"The people on bench are {bench_list}")
+    # print("The resources utilization are ",resource_utilization_dict)

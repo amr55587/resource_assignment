@@ -25,8 +25,8 @@ def main(ongoing_projects_path):
     for i in range(len(df_resources_sheet)):
         resource_name=df_resources_sheet['Resource Name'][i]
         skillset=list(df_resources_sheet['Skill Set'][i].split(','))
-        if len(skillset)==1:
-            skillset=skillset[0]
+        # if len(skillset)==1:
+        #     skillset=skillset[0]
         seniority=df_resources_sheet['Seniority'][i]
         hire_date=df_resources_ongoing['Hire date'][i]
         # datetime.strptime(date_string, '%d %b %Y') 
@@ -43,11 +43,20 @@ def main(ongoing_projects_path):
         dict_resources[resource_name]['num_ongoing_projects']=proj_index
         dict_resources[resource_name]['current_load']=dict_resources[resource_name].get('current_load',{})
         dict_resources[resource_name]['current_load'][f'ong_{i}']= {
-            'project': project_name , 'start_date': start.strftime('%d %b %Y'), 'end_date':end.strftime('%d %b %Y')}
+            'project': project_name , 'start_date': start.strftime('%d %b %Y'), 'end_date':end.strftime('%d %b %Y'),'uf':1}
+
+    for i in range(len(df_resources_sheet)):
+        resource_name=df_resources_sheet['Resource Name'][i]
+        if dict_resources[resource_name].get('num_ongoing_projects') is None:
+            dict_resources[resource_name]['num_ongoing_projects']=0
+            dict_resources[resource_name]['current_load']=dict_resources[resource_name].get('current_load',{})
+            dict_resources[resource_name]['current_load'][f'ong_{i}']= {
+            'project': 'idle' , 'start_date': "01 JAN 1900", 'end_date':"02 JAN 1900",'uf':0}
+
 
     return dict_resources
+if __name__ == "__main__":
+    dict_ongoing_resources=main(ongoing_projects_path)
+    print("The final output is",dict_ongoing_resources)
 
-dict_ongoing_resources=main(ongoing_projects_path)
-print("The final output is",dict_ongoing_resources)
-
-    
+        

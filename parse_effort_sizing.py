@@ -110,15 +110,15 @@ def main(project_name,project_start_date,path):
 
 
         df_1=df_tasks_only[df_tasks_only['task_nature']=="Phase"][["Phase_id"]+role_names ].set_index("Phase_id").applymap(lambda x :x>0)
-        print(df_1)
-        print("\n")
+        # print(df_1)
+        # print("\n")
         dict_pipline_assignemnt={}
         def some_func(df_1):
             for role in role_names:
                 list_x=list(df_1[role].where(lambda x :x==True).dropna().index)
                 start_date=dict_phase_start_end[min(list_x)]['start_date']
                 end_date=dict_phase_start_end[max(list_x)]['end_date']
-                dict_pipline_assignemnt[(project_name,role)]={'start_date':start_date,'end_date':end_date,'skillset':role.split('_')[2]}
+                dict_pipline_assignemnt[(project_name,f'{project_name}_{role}')]={'start_date':start_date.strftime('%d %b %Y'),'end_date':end_date.strftime('%d %b %Y'),'skillset':role.split('_')[2]}
             return dict_pipline_assignemnt
         dict_pipline_assignemnt=some_func(df_1)
         # print(dict_pipline_assignemnt)
@@ -126,9 +126,9 @@ def main(project_name,project_start_date,path):
     df_roles,role_names=parse_the_required_roles(path)
     # print(role_names)
     return retreive_resource_pipeline(path,df_roles,role_names)
-
-dict_x=main(project_name,project_start_date,path)
-print("The final output is",dict_x)
+if __name__ == "__main__":
+    dict_x=main(project_name,project_start_date,path)
+    # print("The final output is",dict_x)
 
 
 
