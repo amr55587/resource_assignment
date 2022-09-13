@@ -233,7 +233,7 @@ def gant_chart_and_hiring_status(ra_dict,pipeline_tasks):
     print(" and ".join (pd_2[pd_2['assignment_status']=="To be Hired"]['Role'].unique()))
 
 
-
+"""1st Part """
 RESOURCES=parse_resources(path_to_datafolder)
 # print("RESOURCES are ",RESOURCES)
 # print("\n")
@@ -242,9 +242,16 @@ pipeline_project_list=read_effort_directory(path_to_datafolder)
 pipeline_tasks= parse_effort_sizing(path_to_datafolder,pipeline_project_list)
 
 # print("pipeline tasks are ",pipeline_tasks)
-# print_resource_KPIs(RESOURCES)
+print_resource_KPIs(RESOURCES)   ### ---- > Here must be show
+print("\n\n")
+
+"""DEpendancy with UI
+Output : The selected pipeline list to input to the engine
+"""
+pipeline_tasks=clickable_function(pipeline_tasks)
 
 
+"""2nd Part """
 model,ra_dict,pipeline_project_tasks=run_optimization(RESOURCES,pipeline_tasks)
 print(ra_dict)
 
