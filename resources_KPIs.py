@@ -1,9 +1,8 @@
-import parse_ongoing_resources as parse_res
+#import parse_ongoing_resources as parse_res
 from datetime import datetime
-
 import utils
 
-def main(dict_resources):
+def produce_res_kpis(dict_resources):
 
     num_resources=len(dict_resources.keys())
 
@@ -56,9 +55,9 @@ def main(dict_resources):
     return num_resources,bench_count,bench_list,resource_utilization_dict
 
 
-if __name__ == "__main__":
-    dict_resources=parse_res.main("data")
-    num_resources,bench_count,bench_list,resource_utilization_dict=main(dict_resources)
+#if __name__ == "__main__":
+    #dict_resources=parse_res.main("data")
+    #num_resources,bench_count,bench_list,resource_utilization_dict=produce_res_kpis(dict_resources)
 
 
     # print(f"You have {num_resources} Resources")
