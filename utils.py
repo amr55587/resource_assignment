@@ -65,19 +65,33 @@ def convert_to_pd(TASKS):
 def plot_gantt_chart(df_tasks):
     fig = px.timeline(df_tasks, x_start="Start", x_end="End", y="Task",color="Role")
     fig.update_yaxes(autorange="reversed") # otherwise tasks are listed from the bottom up
-    fig.show()
+    
+    return fig
+
+'''
 
 def plot_assignment_gantt_chart(df_tasks):
     num_projects=len(df_tasks['Project'].unique())
     fig = make_subplots(rows=num_projects, cols=2)
 
-
     for project in df_tasks['Project'].unique():
         df_plot=df_tasks[df_tasks['Project']==project]
         fig = px.timeline(df_plot, x_start="Start", x_end="End", y="Task",color="assignment_status")
         fig.update_yaxes(autorange="reversed") # otherwise tasks are listed from the bottom up
-    fig.show()
+    return fig
 
+    #fig.show()
+'''
+
+def plot_assignment_gantt_chart(df_tasks):
+    num_projects=len(df_tasks['Project'].unique())
+    # fig = make_subplots(rows=num_projects, cols=2)
+    df_plot=df_tasks
+    # for project in df_tasks['Project'].unique():
+    fig = px.timeline(df_plot, x_start="Start", x_end="End", y="Task",
+    color="assignment_status")
+    fig.update_yaxes(autorange="reversed") # otherwise tasks are listed from the bottom up
+    return fig 
 
 
 def add_pipeline_type(pipeline_tasks):
