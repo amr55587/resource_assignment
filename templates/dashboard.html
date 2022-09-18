@@ -1,0 +1,23 @@
+
+<!doctype html>
+<html>
+  <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}"
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <body>
+    <center> 
+    <h1>Resourcse Assignment Gantt Chart</h1>
+    <div id='chart' class='chart'”></div>
+    <h3>You need to hire the following : </h3>
+    <h4>{{ hire_res_info }}</h4>
+    <br>
+    <a href='/'>go back to home page</a>
+
+  </center>
+  </body>
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+    <script type='text/javascript'>
+        var graphs = {{graphJSON | safe}};
+        Plotly.plot('chart',graphs,{});
+    </script>
+</html>

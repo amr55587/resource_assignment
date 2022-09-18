@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title%}Resources Assignments{% endblock %}
+
+{% block content %}
+    <center> 
+            <br>
+            <img src='static\devoteam-logo.png' alt="home_background" style="height:110px; width:380px;"> <br><br>
+            <h1>Optimizing Tasks & Resources Assignments</h1><br>
+
+            <h2>Select the pipeline</h2>
+
+            <!-- Extract the projects/tasks labels from the pipeline-->
+            <select id ='selectvalue', multiple="multiple"></select>
+            <script>
+                    var selectvalue = document.getElementById("selectvalue"), test = {{ pipeline | tojson }};
+                    
+                    for(var i = 0; i < test.length; i++) // This line checks for the length of the data you feeding in i.e the no of items
+                    {
+                        var selection = document.createElement("OPTION"), // This line creates a variable to store the different values fed in from the JSON object "TEST"
+                        txt = document.createTextNode(test[i]); // This just reads each value from the test JSON variable above
+                        selection.appendChild(txt); // This line appends each value as it is read.
+                        selection.setAttribute("value",test[i]); // This line sets each value read in as a value for the drop down
+                        selectvalue.insertBefore(selection,selectvalue.Child); //This reads eah value into the dropdown based on the order in the "TEST" above.
+                    }
+            </script>
+            <br><br>
+            
+            <form action="#" method="post">
+                <input  type="hidden" id='final_selection_value' name="selected_value"/>
+                <input type="submit" value="optimize" id="submit" class= "button_style"/>
+            </form>
+            <h2>Statistics</h2>
+            <p>{{res_KPIs_stats[0]}}</p>
+            <p>{{res_KPIs_stats[1]}}</p>
+            <p>{{res_KPIs_stats[2]}}</p>
+            <p>{{res_KPIs_stats[3]}}</p>
+            <br>
+
+    </center>
+
+    <script>
+        $(document).ready(function() {
+            $('#selectvalue').multiselect({
+            includeSelectAllOption: true,  
+            enableFiltering: false,
+            enableCaseInsensitiveFiltering: true,
+            filterPlaceholder: 'searach..',
+
+
+            });
+            
+            $('#selectvalue').multiselect('select');
+        
+        });
+    </script>
+
+    <script>
+        document.getElementById("submit").onclick = function() {
+            var selected = [];
+            for (var option of document.getElementById('selectvalue').options)
+            {
+                if (option.selected) {
+                    selected.push(option.value);
+                }
+            }
+            document.getElementById('final_selection_value').value = selected
+
+        }
+    </script>
+{% endblock %}
+
+
