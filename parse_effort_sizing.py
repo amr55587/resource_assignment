@@ -10,20 +10,15 @@ Output in the form of
                         'end_date': Timestamp('2022-01-19 00:00:00'), 'skillset': 'AI Lead'}
 
 """
-
-
 import pandas as pd
-import numpy as np
-
 import utils as utils
 import datetime
 
-project_name="STC"
-project_start_date="1 JAN 2022"
-path="data/STC_effort_sizing.xlsx"
+#project_name="STC"
+#project_start_date="1 JAN 2022"
+#path="data/STC_effort_sizing.xlsx"
 
-
-def main(project_name,project_start_date,path):
+def parse_project_info_from_effort_sizing(project_name,project_start_date,path):
 
     def parse_the_required_roles(path):
         df_roles=pd.read_excel(path,skiprows=lambda x : x > 4 ,header=None)
@@ -34,7 +29,7 @@ def main(project_name,project_start_date,path):
 
         df_roles.columns=['Seniority Level','origin','Role','resource_name']
         df_roles['sen_origin_role']=df_roles['Seniority Level'] + '_' + df_roles['origin'] + '_' +df_roles['Role']
-        df_roles=df_roles[2:].dropna(subset='sen_origin_role')
+        df_roles=df_roles[2:].dropna(subset=['sen_origin_role'])
         role_names=list(df_roles['sen_origin_role'].values)
         return df_roles,role_names
 
@@ -126,9 +121,8 @@ def main(project_name,project_start_date,path):
     df_roles,role_names=parse_the_required_roles(path)
     # print(role_names)
     return retreive_resource_pipeline(path,df_roles,role_names)
-if __name__ == "__main__":
-    dict_x=main(project_name,project_start_date,path)
-    # print("The final output is",dict_x)
 
 
+#x = parse_effort_sizing_files(project_name,project_start_date,path)
+#print(x)
 
