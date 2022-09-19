@@ -1,36 +1,29 @@
-import os
+# Import the libraries
 from pyomo.environ import *
 from pyomo.opt import SolverFactory
-import pandas as pd 
-import copy
-
 
 import warnings
 warnings.filterwarnings('ignore')
-from datetime import datetime
-import matplotlib.pyplot as plt
+import sys
+import os
+import copy
 
-import sys 
-from pathlib import Path
-import plotly.express as px
 
+# import project's modules and depedencies
+from parse_effort_sizing import parse_project_info_from_effort_sizing
+from resources_KPIs import produce_res_kpis
+from generic_resource_kpis import compute_utilization
+
+
+
+# import utlis files
 module_path = ""
 # file=os.path.join(module_path,"utils.py")
 sys.path.append(module_path)
 import utils as utils
 
-import parse_effort_sizing as parse_effort
-import parse_ongoing_resources as parse_ong
-import resources_KPIs as res_kpis
-from generic_resource_kpis import compute_utilization
-
 project_start_date_dict={"STC":"1 JAN 2023" , "TAKA":"15 MAR 2023"}
-
-path_to_datafolder="data"
-
-def parse_resources(path_to_datafolder):
-        RESOURCES=parse_ong.main(path_to_datafolder)
-        return RESOURCES
+path_to_datafolder = "data"
 
 def read_effort_directory(path=path_to_datafolder):    
     """Module that reads the directory and obtain list of pipeline projects"""
@@ -47,7 +40,7 @@ def parse_effort_sizing(path_to_datafolder,input_pipeline_list):
         # project_start_date="1 JAN 2023"
         read_path=f"{path_to_datafolder}/{project}_effort_sizing.xlsx"
         project_start_date=project_start_date_dict[project]
-        single_pipeline_tasks=parse_effort.main(project,project_start_date,read_path)
+        single_pipeline_tasks=parse_project_info_from_effort_sizing(project,project_start_date,read_path)
         list_pipeline.append(single_pipeline_tasks)
 
     pipeline_tasks = {}
@@ -55,20 +48,24 @@ def parse_effort_sizing(path_to_datafolder,input_pipeline_list):
         pipeline_tasks.update(d)
     return pipeline_tasks
 
-
-
-def print_resource_KPIs(RESOURCES):
-    num_resources,bench_count,bench_list,resource_utilization_dict=res_kpis.main(RESOURCES)
+def resources_KPIs_stats(RESOURCES):
+    num_resources,bench_count,bench_list,resource_utilization_dict=produce_res_kpis(RESOURCES)
     overall_current_utilization=sum(resource_utilization_dict.values()) / len(resource_utilization_dict.keys())
-    print(f"You have {num_resources} Resources")
-    print(f"Currently there are {bench_count} on bench ")
-    print(f"The people on bench are {bench_list}")
-    # print("The resources utilization are ",resource_utilization_dict)
-    print("The overall utilization till year end is ",overall_current_utilization)
+    
+    total_num_resources = f"You have {num_resources} Resources"
+    res_on_bench = f"Currently there are {bench_count} on bench "
+    res_bench_list = f"The people on bench are {bench_list}"
+    overall_current_utilization = f"The overall utilization till year end is {overall_current_utilization}"
+    res_KPIs_stats = [total_num_resources, res_on_bench, res_bench_list, overall_current_utilization]
 
-def clickable_function(pipeline_tasks):
-    return pipeline_tasks
+    #print(f"You have {num_resources} Resources")
+    #print(f"Currently there are {bench_count} on bench ")
+    #print(f"The people on bench are {bench_list}")
+    #print("The resources utilization are ",resource_utilization_dict)
+    #print("The overall utilization till year end is ",overall_current_utilization)
 
+    return res_KPIs_stats
+    
 def run_optimization(RESOURCES,pipeline_tasks):
     ongoing_tasks=utils.resource_tasks(RESOURCES)
     pipeline_tasks=utils.add_pipeline_type(pipeline_tasks)
@@ -104,21 +101,21 @@ def run_optimization(RESOURCES,pipeline_tasks):
 
     model.prt_improper_var=Var(model.Resource_assignment,within=Binary, initialize=0)
     model.ra_var=Var(model.RESOURCES,within=NonNegativeReals, initialize=0)
-    model.ta_var=Var(model.pipeline_taskids_only,within=Binary, initialize=0)
+    # model.ta_var=Var(model.pipeline_taskids_only,within=Binary, initialize=0)
 
     #Binding Variables
     model.cons = ConstraintList()
     for resource in model.RESOURCES :
         model.cons.add(
-        sum(model.prt_improper_var[p,t,resource] for p in model.pipeline_projects for t in pipeline_project_tasks[p]  ) ==
+        sum(model.prt_improper_var[p,t,resource] for p in model.pipeline_projects for t in pipeline_project_tasks[p]  ) >=
         model.ra_var[resource] 
         )
 
-    for task in model.pipeline_taskids_only:
-        model.cons.add(
-        sum(model.prt_improper_var[p,task,r] for p in pipeline_task_projects[task] for r in model.RESOURCES  ) ==
-        model.ta_var[task] 
-        )
+    # for task in model.pipeline_taskids_only:
+    #     model.cons.add(
+    #     sum(model.prt_improper_var[p,task,r] for p in pipeline_task_projects[task] for r in model.RESOURCES  ) ==
+    #     model.ta_var[task] 
+    #     )
 
     #Any given task should have one or zero assignment
     for t in model.pipeline_taskids_only:  
@@ -162,7 +159,10 @@ def run_optimization(RESOURCES,pipeline_tasks):
                 
                     + sum(TASKS[proj_task].get('uf',1) for proj_task in resource_constraint['ongoing'])
                         )
-    expr=sum(model.ra_var[r] for r in model.RESOURCES) + sum(model.ta_var[t] for t in model.pipeline_taskids_only)
+    # expr=sum(model.ra_var[r] for r in model.RESOURCES) + sum(model.ta_var[t] for t in model.pipeline_taskids_only)
+    expr=          sum(model.prt_improper_var[p,t,r] for p in model.pipeline_projects
+        for t in pipeline_project_tasks[p]
+            for r in model.RESOURCES) + sum(model.ra_var[r] for r in model.RESOURCES)
     model.objective=Objective(expr=expr,sense=maximize)
 
     os.environ['NEOS_EMAIL'] = 'amr.mansour@devoteam.com'
@@ -188,7 +188,7 @@ def run_optimization(RESOURCES,pipeline_tasks):
     return model,ra_dict,pipeline_project_tasks
 
 
-def post_model(model,pipeline_project_tasks,RESOURCES):    
+def post_model(model,pipeline_project_tasks,RESOURCES, pipeline_tasks):    
 
     RESOURCES_future=copy.deepcopy(RESOURCES)
 
@@ -215,7 +215,6 @@ def future_utilization_metrics(RESOURCES_future,start_period="1 JAN 2023",end_pe
     overall_future_utilization=sum(dict_assignment_resource_util.values()) / len(dict_assignment_resource_util.keys())
     print("The forseen utilization is ",overall_future_utilization)
 
-
 def gant_chart_and_hiring_status(ra_dict,pipeline_tasks):
     def assignment_fullfilment(project,task):
         dict_1=ra_dict[project]
@@ -227,35 +226,8 @@ def gant_chart_and_hiring_status(ra_dict,pipeline_tasks):
 
     pd_2=utils.convert_to_pd(pipeline_tasks)
     pd_2['assignment_status']=pd_2[["Project","Task"]].apply(lambda x:assignment_fullfilment(*x),axis=1)
-    utils.plot_assignment_gantt_chart(pd_2)
+    hire_res_info = " and ".join (pd_2[pd_2['assignment_status']=="To be Hired"]['Role'].unique())
+    return pd_2, hire_res_info
 
-    print("You need to hire the following : ")
-    print(" and ".join (pd_2[pd_2['assignment_status']=="To be Hired"]['Role'].unique()))
-
-
-"""1st Part """
-RESOURCES=parse_resources(path_to_datafolder)
-# print("RESOURCES are ",RESOURCES)
-# print("\n")
-pipeline_project_list=read_effort_directory(path_to_datafolder)
-# print(pipeline_project_list)
-pipeline_tasks= parse_effort_sizing(path_to_datafolder,pipeline_project_list)
-
-# print("pipeline tasks are ",pipeline_tasks)
-print_resource_KPIs(RESOURCES)   ### ---- > Here must be show
-print("\n\n")
-
-"""DEpendancy with UI
-Output : The selected pipeline list to input to the engine
-"""
-pipeline_tasks=clickable_function(pipeline_tasks)
-
-
-"""2nd Part """
-model,ra_dict,pipeline_project_tasks=run_optimization(RESOURCES,pipeline_tasks)
-print(ra_dict)
-
-RESOURCES_future=post_model(model,pipeline_project_tasks,RESOURCES)
-
-future_utilization_metrics(RESOURCES_future)
-gant_chart_and_hiring_status(ra_dict,pipeline_tasks)
+    #print("You need to hire the following : ")
+    #print(" and ".join (pd_2[pd_2['assignment_status']=="To be Hired"]['Role'].unique()))

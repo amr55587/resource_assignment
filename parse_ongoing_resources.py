@@ -1,9 +1,8 @@
 import pandas as pd 
-from datetime import datetime
 
-ongoing_projects_path="data"
+# ongoing_projects_path="data"
 
-def main(ongoing_projects_path):
+def parse_ongoing_resources_info(ongoing_projects_path):
     path_ongoing=ongoing_projects_path + "/ongoing_projects.xlsx"
     path_resources=ongoing_projects_path + "/Resources_sheet.xlsx"
 
@@ -55,8 +54,10 @@ def main(ongoing_projects_path):
 
 
     return dict_resources
-if __name__ == "__main__":
-    dict_ongoing_resources=main(ongoing_projects_path)
-    print("The final output is",dict_ongoing_resources)
+
+
+#if __name__ == "__main__":
+    #dict_ongoing_resources=main(ongoing_projects_path)
+    #print("The final output is",dict_ongoing_resources)
 
         

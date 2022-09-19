@@ -1,0 +1,40 @@
+body            { font-family: "Lucida Sans Unicode", "Lucida Grande", sans-serif; }
+a, h1, h2       { color: #3C3C3A; }
+h1, h2          { margin: 0; }
+
+ 
+table.dataframe, .dataframe th, .dataframe td {
+  border-bottom: 1px solid #C8C8C8;
+  border-collapse: collapse;
+  text-align:left;
+  padding: 10px;
+  margin-bottom: 40px;
+  font-size: 0.9em;
+}
+
+.button_style {
+  font-size: 1.4em;
+  font-weight: bold;
+  font-family: "Lucida Sans Unicode" ;
+  color: white; 
+  background-color: #F3465F;
+  height:50px; 
+  width:250px;
+  border-radius: 30px;
+  border: none;
+
+}
+
+/* SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace */
+
+.cols_rows_df th {
+    background-color: #F3465F;
+    color: white;
+}
+
+tr:nth-child(odd)		{ background-color:#eee; }
+tr:nth-child(even)	{ background-color:#fff; }
+
+tr:hover            { 
+                      color: white;
+                      background-color: #3C3C3A;}
