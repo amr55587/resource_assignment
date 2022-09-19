@@ -100,16 +100,15 @@ def run_optimization(RESOURCES,pipeline_tasks):
     model.Resource_assignment=Set(initialize=model.pipeline_tasks * model.RESOURCES, dimen=3)
 
     model.prt_improper_var=Var(model.Resource_assignment,within=Binary, initialize=0)
-    model.ra_var=Var(model.RESOURCES,within=NonNegativeReals, initialize=0)
+    model.ra_var=Var(model.RESOURCES,within=Binary, initialize=0)
     # model.ta_var=Var(model.pipeline_taskids_only,within=Binary, initialize=0)
 
     #Binding Variables
     model.cons = ConstraintList()
     for resource in model.RESOURCES :
         model.cons.add(
-        sum(model.prt_improper_var[p,t,resource] for p in model.pipeline_projects for t in pipeline_project_tasks[p]  ) >=
-        model.ra_var[resource] 
-        )
+        model.ra_var[resource] <=sum(model.prt_improper_var[p,t,resource] for p in model.pipeline_projects for t in pipeline_project_tasks[p]  )
+    )
 
     # for task in model.pipeline_taskids_only:
     #     model.cons.add(
@@ -185,7 +184,7 @@ def run_optimization(RESOURCES,pipeline_tasks):
 
     ra_dict=get_resource_assignment()
 
-    return model,ra_dict,pipeline_project_tasks
+    return model,ra_dict,pipeline_project_tasks,pipeline_tasks
 
 
 def post_model(model,pipeline_project_tasks,RESOURCES, pipeline_tasks):    
