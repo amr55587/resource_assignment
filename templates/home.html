@@ -4,16 +4,19 @@
 {% block content %}
     <center> 
             <br>
-            <img src='static\devoteam-logo.png' alt="home_background" style="height:110px; width:380px;"> <br><br>
-            <h1>Optimizing Tasks & Resources Assignments</h1><br>
-
-            <h2>Select the pipeline</h2>
-
+            <div data-aos="zoom-in" data-aos-delay="700">
+                <img src='static\devoteam-logo.png' alt="home_background" style="height:110px; width:380px;"> <br><br>
+            </div> 
+            <div data-aos="zoom-in" data-aos-delay="1100">
+            <h1 style="color: #56555A; font-weight: bold;">Optimizing Tasks & Resources Assignments</h1><br>
+            </div>    
+            <div data-aos="zoom-in-up" data-aos-delay="2500">
+            <h3 style="color: #56555A; font-weight: bold;">Select the pipeline</h3><br>
             <!-- Extract the projects/tasks labels from the pipeline-->
             <select id ='selectvalue', multiple="multiple"></select>
+            
             <script>
-                    var selectvalue = document.getElementById("selectvalue"), test = {{ pipeline | tojson }};
-                    
+                    var selectvalue = document.getElementById("selectvalue"), test = {{ pipeline | tojson }};                    
                     for(var i = 0; i < test.length; i++) // This line checks for the length of the data you feeding in i.e the no of items
                     {
                         var selection = document.createElement("OPTION"), // This line creates a variable to store the different values fed in from the JSON object "TEST"
@@ -23,19 +26,16 @@
                         selectvalue.insertBefore(selection,selectvalue.Child); //This reads eah value into the dropdown based on the order in the "TEST" above.
                     }
             </script>
+             
             <br><br>
             
             <form action="#" method="post">
                 <input  type="hidden" id='final_selection_value' name="selected_value"/>
-                <input type="submit" value="optimize" id="submit" class= "button_style"/>
+                <br>
+                <input type="submit" value="Plan" id="submit" class= "button_style"/>
             </form>
-            <h2>Statistics</h2>
-            <p>{{res_KPIs_stats[0]}}</p>
-            <p>{{res_KPIs_stats[1]}}</p>
-            <p>{{res_KPIs_stats[2]}}</p>
-            <p>{{res_KPIs_stats[3]}}</p>
-            <br>
-
+        </div>  
+       
     </center>
 
     <script>
@@ -46,9 +46,7 @@
             enableCaseInsensitiveFiltering: true,
             filterPlaceholder: 'searach..',
 
-
             });
-            
             $('#selectvalue').multiselect('select');
         
         });
@@ -67,6 +65,22 @@
 
         }
     </script>
+    <br><br> <br><br>
+    <center>
+        <div data-aos="fade-right" data-aos-delay="1200" style="font-size: 16px; font-weight: bold;">
+            You have <mark><span style="color: #F8485E;">{{res_KPIs_stats[0]}}</span></mark> Resources
+        </div><br>
+        <div data-aos="fade-right" data-aos-delay="1400" style="font-size: 16px; font-weight: bold;">
+            Currently there are <mark><span style="color: #F8485E;">{{res_KPIs_stats[1]}}</span></mark> on bench
+        </div><br>
+        <div data-aos="fade-right" data-aos-delay="1600" style="font-size: 16px; font-weight: bold;">
+            The people on bench are: <mark><span style="color: #F8485E;">{{res_KPIs_stats[2]}}</span></mark>
+        </div><br>
+        <div data-aos="fade-right" data-aos-delay="1800" style="font-size: 16px; font-weight: bold;">
+            The overall utilization till year end is <mark><span style="color: #F8485E;">{{res_KPIs_stats[3]}}</span></mark>
+        </div>  
+        <br><br>
+    </center>  
 {% endblock %}
 
 
