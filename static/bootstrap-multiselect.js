@@ -827,7 +827,7 @@
                     }
                 }, this));
 
-                $("li.multiselect-all", this.$ul).css('background', '#f3f3f3').css('border-bottom', '1px solid #eaeaea');
+                $("li.multiselect-all", this.$ul).css('background', '#56555A').css('border-bottom', '1px solid #eaeaea');
                 $("li.multiselect-all > a > label.checkbox", this.$ul).css('padding', '3px 20px 3px 35px');
                 $("li.multiselect-group > a > input", this.$ul).css('margin', '4px 0px 5px -20px');
             }

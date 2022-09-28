@@ -25,6 +25,50 @@ table.dataframe, .dataframe th, .dataframe td {
 
 }
 
+.button_style:active {
+  background: #56555A;
+}
+
+
+.button_style_v2 {
+  font-size: 1.0em;
+  font-weight: bold;
+  font-family: "Lucida Sans Unicode" ;
+  color: white; 
+  background-color: #F3465F;
+  height:40px; 
+  width:200px;
+  border-radius: 30px;
+  border: none;
+
+}
+
+.button_style_v3 {
+  font-size: 1.0em;
+  font-weight: bold;
+  font-family: "Lucida Sans Unicode" ;
+  color: white; 
+  background-color: #56555A;
+  height:40px; 
+  width:200px;
+  border-radius: 30px;
+  border: none;
+
+}
+
+.button_close {
+  font-size: 1.0em;
+  font-weight: bold;
+  font-family: "Lucida Sans Unicode" ;
+  color: white; 
+  background-color: #F3465F;
+  height:30px; 
+  width:100px;
+  border-radius: 30px;
+  border: none;
+
+}
+
 /* SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace */
 
 .cols_rows_df th {
@@ -38,3 +82,9 @@ tr:nth-child(even)	{ background-color:#fff; }
 tr:hover            { 
                       color: white;
                       background-color: #3C3C3A;}
+
+.font-name{
+  color:rgb(43, 1, 254);
+  font-size:60px;
+
+}

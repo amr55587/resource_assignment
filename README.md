@@ -1,4 +1,4 @@
-Resources Assignment Tool
+ Resources Assignment Tool
 ================
 
 # Resources Assignment Tool
@@ -49,19 +49,24 @@ tasks that require unavailable resources.
 
 -   `mkdir env`
 
-activate the environment to start libraries\packages installation
+-   create environment by python
+
+-   `python -m venv env/devoteam_ra`
+
+
+**2-activate the environment to start libraries\packages installation**
 
 -   `env\devoteam_ra\Scripts\activate`
 
--   output
+-   output :
 
 ``` python
 >> (devoteam_ra) C:\Github Projects\resource_assignment-main>
 ```
 
-**`Note:`** to deactivate the environment just run `deactivate`
+**`Note:`** to deactivate the environment just run `deactivate` (`Don't do it for now`)
 
-**2- Install the required libraries & packages from `requirements.txt`
+**3- Install the required libraries & packages from `requirements.txt`
 file**
 
 run the following command on cmd after activating the environment
@@ -74,18 +79,16 @@ run the following command on cmd after activating the environment
 -   To run the tool please make sure you are still in the same
     environment
 
--   run in `cmd`
+-   run in `cmd` : `python main.py`
 
-    -   `python main.py`
-
-    ``` python
-    >> 
-    """ 
-    WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
-     * Running on http://127.0.0.1:8080
-    Press CTRL+C to quit
-    """ 
-    ```
+``` python
+>> 
+""" 
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+    * Running on http://127.0.0.1:8080
+Press CTRL+C to quit
+""" 
+```
 
 -   copy & paste [`http://127.0.0.1:8080`](http://127.0.0.1:8080) in
     your browser to show the running tool.

@@ -1,23 +1,103 @@
 
 <!doctype html>
 <html>
+  <link rel="shortcut icon" type="images/favicon.ico" href="/">
   <link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}"
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- AOS Animations -->
+  <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+
+ <!-- added -->
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+  <link rel="stylesheet" href="static/bootstrap-multiselect.css" type="text/css"/>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"   integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="   crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> 
+  <script type="text/javascript" src="static/bootstrap-multiselect.js"></script>
 
   <body>
-    <center> 
+    <center>
+  <div data-aos="zoom-in" data-aos-delay="700">
     <h1>Resourcse Assignment Gantt Chart</h1>
-    <div id='chart' class='chart'”></div>
-    <h3>You need to hire the following : </h3>
-    <h4>{{ hire_res_info }}</h4>
+  </div>
+  <div data-aos="zoom-in" data-aos-delay="1100">
+    <div id='chart' class='chart'></div>
+  </div>
+    </center>
+    <div data-aos="fade-right" data-aos-delay="1200" style="font-size: 20px; color: #56555A; font-weight: bold;">
+      <span style="position:relative; left:80px;">Resources Utilization Information:</span>
+      <span style="position:relative; left:800px;">You need to hire the following:</span>
+    </div>
     <br>
-    <a href='/'>go back to home page</a>
+    <div data-aos="fade-right" data-aos-delay="1500" style="font-size: 16px; font-weight: bold; position:relative; left:1120px;" >
+      <ul>
+        <li><mark><span style="color: #F8485E;">{{hire_res_info}}</span></mark></li>
+      </ul>
+   </div> 
+   <div> 
 
-  </center>
+  </div>
+    <div class="container">      
+  <div data-aos="fade-right" data-aos-delay="1500" style="font-size: 14px; color: #56555A; font-weight: bold; position:relative; right:160px;">       
+      The Predicted Overall Utilization: <mark><span style="color: #F8485E;">{{overall_fu}}</span></mark>
+  </div>
+  <br>
+  <div data-aos="fade-right" data-aos-delay="1500" style="font-size: 14px; color: #56555A; font-weight: bold; position:relative; right:120px;">       
+
+    <button type="button" class="button_style_v3" data-toggle="modal" data-target="#myModal">
+      Show more details
+    </button>
+  </div>
+    
+    <center>
+      <!-- The Modal -->
+    <div class="modal" id="myModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+    
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h2 class="modal-title">Resources Utilization</h2>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+    
+          <!-- Modal body -->
+      <div class="modal-body">
+            {% for table in tables %}
+                {{ table|safe }}
+            {% endfor %}
+      </div>
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="button_close" data-dismiss="modal">Close</button>
+          </div>
+    
+        </div>
+      </div>
+    </center>
+    </div>
+    </div>
+    <center data-aos="fade-right" data-aos-delay="2000">
+      <form action="/">
+        <input type="submit" value="⭮ Go back to plan page" class= "button_style_v2"/>
+      </form>
+    </center>
+
+    <br><br>
   </body>
     <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
     <script type='text/javascript'>
         var graphs = {{graphJSON | safe}};
         Plotly.plot('chart',graphs,{});
     </script>
+
+    <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+    <script>
+        AOS.init({
+
+        });
+    </script>
 </html>
+
+
