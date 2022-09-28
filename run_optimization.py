@@ -52,10 +52,10 @@ def resources_KPIs_stats(RESOURCES):
     num_resources,bench_count,bench_list,resource_utilization_dict=produce_res_kpis(RESOURCES)
     overall_current_utilization=sum(resource_utilization_dict.values()) / len(resource_utilization_dict.keys())
     
-    total_num_resources = f"You have {num_resources} Resources"
-    res_on_bench = f"Currently there are {bench_count} on bench "
-    res_bench_list = f"The people on bench are {bench_list}"
-    overall_current_utilization = f"The overall utilization till year end is {overall_current_utilization}"
+    total_num_resources = f"{num_resources}"
+    res_on_bench = f"{bench_count}"
+    res_bench_list = f"{bench_list}"
+    overall_current_utilization = f"{round(overall_current_utilization, 2)}%"
     res_KPIs_stats = [total_num_resources, res_on_bench, res_bench_list, overall_current_utilization]
 
     #print(f"You have {num_resources} Resources")
@@ -209,10 +209,11 @@ def post_model(model,pipeline_project_tasks,RESOURCES, pipeline_tasks):
 
 def future_utilization_metrics(RESOURCES_future,start_period="1 JAN 2023",end_period="31 DEC 2023"):
     dict_assignment_resource_util=compute_utilization(start_period,end_period,RESOURCES_future)
-    print(dict_assignment_resource_util)
+    #print(dict_assignment_resource_util)
 
     overall_future_utilization=sum(dict_assignment_resource_util.values()) / len(dict_assignment_resource_util.keys())
-    print("The forseen utilization is ",overall_future_utilization)
+    #print("The forseen utilization is ",overall_future_utilization)
+    return dict_assignment_resource_util, overall_future_utilization
 
 def gant_chart_and_hiring_status(ra_dict,pipeline_tasks):
     def assignment_fullfilment(project,task):
