@@ -1,6 +1,3 @@
- Resources Assignment Tool
-================
-
 # Resources Assignment Tool
 
 ## **Description**
